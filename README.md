@@ -6,4 +6,5 @@ Helpful for codes
 ### Pytorch
 * pytorch_basic
 	- Refer to https://github.com/deeplearningzerotoall/PyTorch 
-	
+* ML_prac
+	- Refer to Hands-On Machine Learning
