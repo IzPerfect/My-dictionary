@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>jsfilter</title>
+</head>
+<body>
+    <h1>jsfilter 연습</h1>
+    <h2>jsfilter를 통해 (이름이 같은 {key:value} 모아 date 최대값만 저장) </h2>
+    <ul>
+        <li>
+            <a href=""https://7942yongdae.tistory.com/49"">1차원 배열 sort</a>
+        </li>
+        <li>
+            <a href=""https://velog.io/@jayjay8/JS-sort%EB%A1%9C-%EC%9D%B4%EC%A4%91%EB%B0%B0%EC%97%B4-%EC%A0%95%EB%A0%AC%ED%95%98%EA%B8%B0"">array sort</a>
+        </li>
+    </ul>
+
+    <p>
+        Method: userFilterTable <br>
+        Parameters: <br>
+            &nbsp;&nbsp;tableData: [{key1: value1}, {key2: value2} ...]<br>
+            &nbsp;&nbsp;key1: key1을 가진 row를 모아서 정렬 후 key2값으로 sort<br>
+            &nbsp;&nbsp;key2: key1을 가진 row를 모아서 정렬 후 key2값으로 sort<br>
+            &nbsp;&nbsp;sortType: 'descending' or 'ascending'<br>
+        Returns: [{key1: value1}, {key2: value2} ...]<br>
+        Description: tableData에서 key 값 기준으로 row 정렬. 정렬 방식은 'descending' or 'ascending' 중 하나
+    </p>
+    
+    
+    <script>
+        now = new Date()
+
+        let tableData = [
+        {"date": new Date(now), "name": "홍길동", "index": 0},
+        {"date": new Date(now -10000), "name": "홍길동", "index": 1},
+        {"date": new Date(now-10000), "name": "이미주", "index": 0},
+        {"date": new Date(now-20000), "name": "이미주", "index": 1},
+        {"date": new Date(now-30000), "name": "유재석", "index": 0},
+        {"date": new Date(now-40000), "name": "유재석", "index": 1},
+        ]
+        let filteredTableData = [] // 필터후 데이터 모음
+    
+        console.log(tableData)
+
+        // 홍길동인 것만~
+        let result = tableData.filter((row, index, rows) => {
+            // row: 요소값
+            // index: source에서 요소의 index
+            // rows: 순회하는 대상
+            
+            console.log(row)    
+            console.log(index)
+            console.log(rows)
+
+            return row.name === "홍길동"
+
+        })
+        
+        console.log("\nThis is result")
+        console.log(result) 
+        console.log("\n")
+
+        // 중복제거 예제 - 1차원 array일때
+        const numbers = [1, 1, 2, 2, 3, 4, 5];
+
+        const newNumbers = numbers.filter((number, index, target) => {
+            // indexOf는 '첫번째'로 나타내는 위치 index return
+            console.log(number + "\t" + target.indexOf(number) + "\t" + index)
+            
+            return target.indexOf(number) === index;
+        });
+
+        
+        // name만 담기
+        let onlyNames = []
+        tableData.forEach(element =>{ 
+            onlyNames.push(element.name)
+        })
+        console.log(onlyNames);
+
+        // name 중복 값 제거
+        let names = onlyNames.filter((str, index, target)=>{
+            return target.indexOf(str) === index
+        });
+
+        console.log(names)
+
+        // 같은 name을 가진 row filter + 그 row 내에서 최고값 filter
+        // [sort]https://velog.io/@jayjay8/JS-sort%EB%A1%9C-%EC%9D%B4%EC%A4%91%EB%B0%B0%EC%97%B4-%EC%A0%95%EB%A0%AC%ED%95%98%EA%B8%B0
+        for(i=0; i<names.length; i++){
+            filteredTableData.push(tableData.filter((row, index, rows) => {
+                return row.name === names[i]
+            }).sort((a, b) => b.date - a.date)[0]) // 내림차순
+        }
+
+        console.log(filteredTableData)
+
+
+        ///////////////////////
+        /// **최중 함수 형태**//
+        ///////////////////////
+        /*
+            Method: userFilterTable
+            Parameters: 
+                tableData: [{key1: value1}, {key2: value2} ...]
+                key1: key1을 가진 row를 모아서 정렬 후 key2값으로 sort
+                key2: key1을 가진 row를 모아서 정렬 후 key2값으로 sort
+                sortType: 'descending' or 'ascending'
+            Returns: [{key1: value1}, {key2: value2} ...]
+            Description: tableData에서 key 값 기준으로 row 정렬. 정렬 방식은 'descending' or 'ascending' 중 하나
+        */
+        function userFilterTable(tableData, key1, key2, sortType) {
+            let filteredTableData = [];
+
+            // 이름만 담기
+            let onlyNames = []
+            tableData.forEach(element =>{ 
+                onlyNames.push(element[key1])
+            })
+
+            // name 중복 값제거
+            let names = onlyNames.filter((str, index, target)=>{
+                return target.indexOf(str) === index
+            });
+
+            for(i=0; i<names.length; i++){
+                filteredTableData.push(tableData.filter((row, index, rows) => {
+                    return row.name === names[i]
+                }).sort((a, b) => {
+                    if (sortType === 'descending'){
+                        return b[key2] - a[key2]
+                    }
+                 
+                    return a[key2] - b[key2]
+                    
+                    
+                })[0]) // 내림차순
+            }
+
+            return filteredTableData
+        }
+
+        let finalResult = userFilterTable(tableData, "name", "date", "descending") //descending, ascending
+
+        console.log("\n\
+            /// **최중 함수 형태**//\
+        ")
+        console.log(finalResult)
+
+
+
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a href = "https://www.youtube.com/watch?v=aoQSOZfz3vQ&t=821s">여기</a>
+    <script>
+        function sleep(ms) {
+            const wakeUpTime = Date.now() + ms;
+            while (Date.now() < wakeUpTime) {}
+          }
+        function fetchUserPromise() {
+            console.log("2초 sleep")
+
+            sleep(2000);
+            
+            return new Promise((resolve, reject) => {
+                resolve('fetchUser1')
+            })
+        }
+
+        const user1 = fetchUserPromise();
+        user1.then(console.log)
+
+        console.log("중간")
+        
+
+        async function fetchUserAsync() {
+            console.log("3초 sleep")
+
+            sleep(3000);
+            
+            
+            return 'fetchUser2'
+        }
+
+
+        const user2 = fetchUserAsync();
+        user2.then(console.log)
+
+
+        // 2. await
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms))
+        }
+
+        async function getApple() {
+            await delay(3000)
+            return 'apple'
+        }
+        async function getBanana() {
+            await delay(3000)
+            return 'banana'
+        }
+
+        function pickFruitsCallbackHell() {
+            return getApple().then(apple =>{
+                return getBanana().then(banana => `${apple} + ${banana} + 0`)
+            })
+        }
+        pickFruitsCallbackHell().then(console.log)
+
+        console.log("중간2")
+        async function pickFruits() {
+            const apple = await getApple(); // getApple() 3초후 getBanana
+            console.log("now getBanana")
+            const banana = await getBanana();
+            return `${apple} + ${banana} + 1`
+        }
+        pickFruits().then(console.log)
+
+
+        async function pickFruitsWhenMake() {
+            // 아래 const는 만들자 마자 병렬로 실행됨
+            const applePromise = getApple();
+            const bananaPromise = getBanana();
+            
+            const apple = await applePromise;
+            const banana = await bananaPromise;
+
+            return `${apple} + ${banana} + 2`
+        }
+        pickFruitsWhenMake().then(console.log)
+
+        // 3. useful APIs
+        function pickAllFruits() {
+            return Promise.all([getApple(), getBanana()]).then(fruits =>
+            fruits.join('+'))
+        }
+        pickAllFruits().then(console.log)
+
+        function pickOnlyOne() {
+            return Promise.race([getApple(), getBanana()])
+        }
+        pickOnlyOne().then(console.log)
+
+
+    </script>
+</body>
+</html>

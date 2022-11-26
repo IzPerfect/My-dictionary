@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>functions</title>
+</head>
+<body>
+    <h1>JavaScript 다양한 함수 형태에 대해 알아 보자</h1>
+    <ul>
+        <li><a href="https://blueoceannshark.tistory.com/entry/%EA%B0%95%EC%A2%8C%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%ED%95%A8%EC%88%98%EB%8B%A4%EC%96%91%ED%95%9C-%ED%95%A8%EC%88%98%ED%91%9C%ED%98%84-%EC%A0%95%EB%A6%AC">
+            함수의 다양한 선언 방법
+        </a></li>
+        <li><a href="https://velog.io/@jaeeunxo1/JavaScript-function2">
+            함수의 종류1
+        </a></li>
+        <li><a href="https://blueoceannshark.tistory.com/entry/%EA%B0%95%EC%A2%8C%EC%9E%90%EB%B0%94%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%ED%95%A8%EC%88%98%EB%8B%A4%EC%96%91%ED%95%9C-%ED%95%A8%EC%88%98%ED%91%9C%ED%98%84-%EC%A0%95%EB%A6%AC">함수의 종류2</a></li>
+    </ul>
+
+
+    <script>
+        /* **함수의 다양한 선언 방법 */
+
+        /// *기본 함수 형태 ///
+        function functionBasic(name){
+            console.log(`My nam is ${name}`);
+            return true;
+        }
+        functionBasic("functionBasic");
+
+        // 참고) return이 없더라도 undefined로 반환됨
+        function noReturn(name){            
+        }
+        let result = noReturn("noReturn");
+        console.log(`result is ${result}`);
+
+        // 참고) default 설정가능
+        function defaultReturn(name = 'default'){
+            return name
+        }
+        result = defaultReturn()
+        console.log(`result is ${result}`);
+
+        /// *함수 선언문 ///
+        // 초기세 모든 함수 선언문을 찾아 생성해놓음 -> 어디서든 호이스팅 가능
+        console.log(plus(1,1));
+        function plus(a, b) {
+            return a+b
+        }
+
+        /// *함수 표현식 ///
+        // 초기 함수를 찾아 생성하지 않고 코드에 도달하면 생성
+        let nowMake = function(value) {
+            console.log("now function made" + value);
+        }
+        nowMake("!!!");
+
+        // 더 간결하게 작성
+        let nowMake2 = (value="!!!") => {console.log("now made2" + value)}
+        nowMake2()
+
+        // return 문 줄 일 때, ()로 바꿔줌
+        let mul = (a, b) => (a*b);
+        console.log(mul(5,5))
+
+        // 매개변수가 하나일 경우 ()도 생략가능
+        let print = (a)=>console.log(a)
+        print("매개변수가 하나일 경우 ()도 생략가능")
+
+        
+
+
+        /* 함수의 종류 */
+        // 콜백함수: 함수 안에서 어떤 특정 시점에 호출되는 함수. 함수 안의 함수
+
+        // ex1
+        function call1(){
+            // ... 전처리
+            callbackFunc(); // 콜백함수
+        }
+        function callbackFunc() {
+            console.log("This is CallBack");
+        }
+        call1();
+
+
+        // ex2
+        function afterCall(){
+            setTimeout(function(){
+                console.log('here callback');
+            });
+        }
+        
+        afterCall();
+        
+        // 즉시 실행: 정의함과 동시에 실행되는 함수. 재사용불가, 초기화 부분에 쓰임
+        (function(){
+            console.log("즉시 실행 되었습니다.");
+         })();
+
+
+        // 내부함수: 함수 내부에 정의
+        function parents(){
+            let a = 10;
+            let b = 20;
+               function child(){
+            let b = 30;
+            console.log(a); // 출력값 10
+            console.log(b); // 출력값 30
+           }
+           return child();
+        }
+
+        // Arguments 객체: 함수 형식에 맞춰 인자를 넘기지 않더라도 에러 발생하지 않음
+        function func(arg1 ,arg2) {
+            console.log(arg1, arg2);
+        }
+        
+        func(); //undefined
+        func(1); // 1 undefined
+        func(1,2); // 1 2
+        func(1,2,3); // 1 2
+
+        // 재귀함수: 자기자신 호출
+        function minus(n) {
+            if(n == 0) {
+                console.log('End');
+                return n;
+            }
+            console.log(n-1);
+            return minus(n - 1);
+        }
+        
+        minus(3);
+        
+    </script>
+</body>
+</html>
