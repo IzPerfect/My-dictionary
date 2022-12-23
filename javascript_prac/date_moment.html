@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.0/moment.min.js"></script>
+    <script>
+        /*
+            new Date()는 자동으로 현재 한국 시간으로 출력
+            **Unix Time은 그대로지만 출력은 현재 로컬 시간 바꿔 출력
+
+            이에 따른 getDate, getHour 도 현재 로컬 시간 기준으로 return
+            단, Unix time(.getTime())은 원래 UTC 기준으로 시간을 return
+
+            moment 에 getTime을 쓴 시간 == ((new Date()).getTime() + (new Date()).getTimezoneOffset()) 시간 출력이 같음
+        */
+        var now = new Date() 
+        console.log("now: " + now)
+        console.log("getTime(): " + now.getTime())
+        console.log(new Date(now.getTime()))
+        console.log("")
+
+        var utcTime = new Date(now.getTime() + now.getTimezoneOffset()*60*1000) // 시간 출력만 UTC Time으로 맞춤. 
+                                                                                // Unix time은 다름. 시간 출력만 맞췄으므로 Unix time은 기존에서 -540*60*1000을 더한 값
+        console.log("utcTime: " + utcTime)
+        console.log("getTime(): " + utcTime.getTime())
+        console.log(new Date(utcTime.getTime()))
+        console.log("")
+
+
+        var UTC = moment(now.getTime()).utc()
+        console.log("UTC Time: " + UTC.toISOString())
+        console.log("UTC Time: " + UTC.format('YYYY-MM-DD HH:mm:ss'))
+        console.log("UTC Time value: " + moment(UTC).valueOf())
+        console.log("")
+
+        let local = moment(UTC).local() // local은 UTC를 한국시간으로 출력해줌(시간 표시 출력만). Unix time은 그대로
+        console.log("local: " + local.format('YYYY-MM-DD HH:mm:ss'))
+        console.log("local: " + local.toISOString())
+        console.log("local value: " + moment(local).valueOf())
+        console.log("")
+
+        let localToUTC = moment.utc(now.getTime())
+        console.log(localToUTC.format('YYYY-MM-DD HH:mm:ss'))
+
+        let local2 = moment(utcTime.getTime()).local()
+        console.log("local2: " + local2.format('YYYY-MM-DD HH:mm:ss'))
+        console.log("local2: " + local2.toISOString())
+        console.log("")
+
+    </script>
+</body>
+</html>
